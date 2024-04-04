@@ -4,9 +4,7 @@ let ctx;
 main();
 function main() {
 
-    let canvas = document.createElement("canvas");
-    document.body.appendChild(canvas);
-
+    let canvas = document.getElementById("canvas");
     ctx = canvas.createCanvasContext(500, 500);
     ctx.background(200, 200, 100)
 
@@ -20,13 +18,13 @@ function main() {
 async function wasmtest() {
 
 
-    let curvelinesNum = 200;
+    let curvelinesNum = document.getElementById("inputnum").value;
     let detail = 1000;
-    let pointsNum = 100;
+    let pointsNum = 80;
 
     let timeStr = `wasm ${curvelinesNum} curves done in`;
-    console.time(timeStr)
 
+    const start = performance.now();
     let result0 = [];
 
 
@@ -103,7 +101,11 @@ async function wasmtest() {
         ctx.stroke();
     }
 
-    console.timeEnd(timeStr)
+
+    const end = performance.now();
+    console.log(`${timeStr} ${end - start} ms = ${(end - start) / 1000} s`);
+    let par = document.getElementById("wasmtime");
+    par.innerHTML =`${timeStr} ${end - start} ms = ${(end - start) / 1000} s` ;
 
 }
 
@@ -115,13 +117,13 @@ function jstest() {
         this.y = y;
     }
 
-    let curvelinesNum = 200;
+    let curvelinesNum = document.getElementById("inputnum").value;
     let detail = 1000;
-    let pointsNum = 100;
+    let pointsNum = 80;
 
 
-    let timeStr = `js ${curvelinesNum} curves done in`;
-    console.time(timeStr)
+    let timeStr = `javascript ${curvelinesNum} curves done in`;
+    const start = performance.now();
 
     let result1 = [];
     for (let km = 0; km < curvelinesNum; km++) {
@@ -156,5 +158,8 @@ function jstest() {
         ctx.stroke();
     }
 
-    console.timeEnd(timeStr)
+    const end = performance.now();
+    console.log(`${timeStr} ${end - start} ms = ${(end - start) / 1000} s`);
+    let par = document.getElementById("jstime");
+    par.innerHTML =`${timeStr} ${end - start} ms = ${(end - start) / 1000} s` ;
 }
