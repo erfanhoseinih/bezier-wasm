@@ -1,10 +1,7 @@
 HTMLCanvasElement.prototype.createCanvasContext = function (...args) {
-
-
-  var context;
-
-
   
+  var context;
+ 
   var width_Context, height_Context;
   if (Number.isInteger(args[0]) && Number.isInteger(args[1])) {
     width_Context = parseInt(args[0])
@@ -23,9 +20,6 @@ HTMLCanvasElement.prototype.createCanvasContext = function (...args) {
 
   return context;
 }
-
-
-
 
  
 

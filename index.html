@@ -4,15 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./canvasutils.js"></script>
-    <script src="./testBezire.js"></script>
-    <script src="./math.js"></script>
+    <script src="./utils/canvasutils.js"></script>
+    <script src="./jsBezier/jsBezire.js"></script>
+    <script src="./utils/math.js"></script>
+    <style>
+        .buttons {
+            display: flex;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        p {
+            margin: 10px 11px;
+        }
+    </style>
 </head>
 
 <body>
- 
- 
-    <script src="./main.js"></script> 
+
+
+    <script src="./main.js"></script>
+    <div class="buttons">
+        <button onclick="wasmtest()">wasm</button>
+        <button onclick="jstest()">javascript</button>
+        <p>click button and check the console!</p>
+    </div>
 
 </body>
 

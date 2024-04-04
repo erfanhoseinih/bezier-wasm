@@ -16,11 +16,10 @@ function curveBeziertest(v, s) {
 
             for (let j = 0; j < letvrt; j += 1) {
                 let currntVerts = [];
-                let rat;
+ 
                 for (let i = 0; i < secVert.length - 1; i += 1) {
 
-                    rat = k;
-                    let p0 = lerpXYB(secVert[i], secVert[i + 1], rat);
+                    let p0 = lerpXYB(secVert[i], secVert[i + 1], k);
                     currntVerts.push(p0);
                 }
 
@@ -28,9 +27,10 @@ function curveBeziertest(v, s) {
                 secVert = currntVerts;
             }
 
-            finalVerts = finalVerts.concat(secVert)
+            finalVerts.push(secVert[0])
 
         }
+        
     } else {
         finalVerts = verts;
     }
