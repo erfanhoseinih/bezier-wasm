@@ -1,4 +1,4 @@
-# Beizer-in-wasm
+# Bezier-in-wasm
  Bezier implementation in wasm
 
 ## Motivation
