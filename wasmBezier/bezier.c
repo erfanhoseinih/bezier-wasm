@@ -9,7 +9,7 @@ float lerp(float o0, float o1, float n)
 }
 
 EMSCRIPTEN_KEEPALIVE
-void curveBezier(float *input_array, float *output_array,float *currnArr  , int lena, int s)
+float curveBezier(float *input_array, float *output_array,float *currnArr  , int lena, int s)
 {
  
     int idxVerts = 0;
@@ -46,6 +46,7 @@ void curveBezier(float *input_array, float *output_array,float *currnArr  , int 
  
     }
  
+    return input_array[0];
 }
 
 EMSCRIPTEN_KEEPALIVE
