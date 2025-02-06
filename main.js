@@ -7,7 +7,6 @@ function main() {
     let canvas = document.getElementById("canvas");
     ctx = canvas.createCanvasContext(500, 500);
     ctx.background(200, 200, 100)
-
     randomSeed(1000)
 }
 
@@ -16,7 +15,7 @@ function main() {
 
 
 function wasmtest() {
-
+    randomSeed(1000)
 
     let curvelinesNum = document.getElementById("inputnum").value;
     let detail = 1000;
@@ -43,7 +42,7 @@ function wasmtest() {
         }
 
 
-        let result = curveBezier(arr, detail);
+        let result = curveBezier(arr,20, detail,1);
         result0.push(new Array(...result));
     }
 
@@ -71,7 +70,7 @@ function wasmtest() {
 
 
 function jstest() {
-
+    randomSeed(1000)
     function vector(x, y) {
         this.x = x;
         this.y = y;
