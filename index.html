@@ -1,52 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./utils/canvasutils.js"></script>
-    <script src="./jsBezier/jsBezire.js"></script>
+
     <script src="./utils/math.js"></script>
-    <script src="./wasmBezier/bezier.js"></script>
-    <script src="./wasmBezier/bezierRun.js"></script>
+    <script src="./bezier/bezier.js"></script>
+    <script src="./bezier/bezierWasmCaller.js"></script>
     <style>
-        .buttons {
-            width: 500px;
-            display: flex;
-        }
+      .buttons {
+        width: 500px;
+        display: flex;
+      }
 
-        button {
-            flex: 1;
-            margin: 5px 10px;
-        }
+      button {
+        flex: 1;
+        margin: 5px 10px;
+      }
 
-        p {
-            margin: 10px 11px;
-        }
-        input{
-            margin-top: 5px;
-            width: 90px;
-            height: 21px;
-            margin-left: 8px;
-            margin-right: 8px;
-        }
+      p {
+        margin: 10px 11px;
+      }
+      input {
+        margin-top: 5px;
+        width: 90px;
+        height: 21px;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
-
+  <body>
     <canvas id="canvas"></canvas>
     <div class="buttons">
-        <p>Number of curves</p>
-        <input type="number" value="200" id="inputnum">
-        <button onclick="wasmtest()">wasm</button>
-        <button onclick="jstest()">javascript</button>
-        
+      <p>Number of curves</p>
+      <input type="number" value="200" id="inputnum" />
+      <button onclick="wasmtest()">run</button>
     </div>
     <p id="wasmtime"></p>
     <p id="jstime"></p>
     <script src="./main.js"></script>
-</body>
-
+  </body>
 </html>

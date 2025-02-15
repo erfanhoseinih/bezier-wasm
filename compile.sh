@@ -1,1 +1,1 @@
-emcc -O3 -Os ./wasmBezier/bezier.c -o ./wasmBezier/bezier.js -s ALLOW_MEMORY_GROWTH
+emcc -O3 ./bezier/bezier.c -o ./bezier/bezier.js -s ALLOW_MEMORY_GROWTH

@@ -10,15 +10,12 @@ function main() {
     randomSeed(1000)
 }
 
-
-
-
-
+ 
 function wasmtest() {
     randomSeed(1000)
 
     let curvelinesNum = document.getElementById("inputnum").value;
-    let detail = 1000;
+    let detail = 500;
     let pointsNum = 80;
 
     let timeStr = `wasm ${curvelinesNum} curves done in`;
@@ -26,9 +23,7 @@ function wasmtest() {
     const start = performance.now();
     let result0 = [];
 
-
-
-
+ 
     for (let km = 0; km < curvelinesNum; km++) {
 
 
@@ -42,7 +37,7 @@ function wasmtest() {
         }
 
 
-        let result = curveBezier(arr,20, detail,1);
+        let result = curveBezier(arr,arr.length/2 , detail,1);
         result0.push(new Array(...result));
     }
 
@@ -68,57 +63,5 @@ function wasmtest() {
 
 }
 
-
-function jstest() {
-    randomSeed(1000)
-    function vector(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    let curvelinesNum = document.getElementById("inputnum").value;
-    let detail = 1000;
-    let pointsNum = 80;
-
-
-    let timeStr = `javascript ${curvelinesNum} curves done in`;
-    const start = performance.now();
-
-    let result1 = [];
-    for (let km = 0; km < curvelinesNum; km++) {
-
-
-        let verts = [];
-        let x = 100;
-        let y = 100;
-        let num1 = 100;
-        for (let i = 0; i < pointsNum; i++) {
-            x = random(-num1, 500 + num1);
-            y = random(-num1, 500 + num1);
-            verts.push(new vector(x, y))
-        }
-
-        let result = curveBeziertest(verts, detail)
-        result1.push(new Array(...result));
-
-    }
-
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.background(200, 200, 100)
-    ctx.globalCompositeOperation = "multiply";
-    for (let i = 0; i < result1.length; i += 1) {
-        ctx.strokeStyle = `rgb(${random(200, 255)} , ${random(0, 255)}, ${random(200, 255)})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for (let j = 0; j < result1[i].length; j += 2) {
-            ctx.lineTo(result1[i][j].x, result1[i][j].y)
-        }
-        ctx.stroke();
-    }
-
-    const end = performance.now();
-    console.log(`${timeStr} ${end - start} ms = ${(end - start) / 1000} s`);
-    let par = document.getElementById("jstime");
-    par.innerHTML =`${timeStr} ${end - start} ms = ${(end - start) / 1000} s` ;
-}
+ 
+ 
