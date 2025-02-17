@@ -107,7 +107,8 @@ void curveBezier(float *vertices, int len, int chunkNum, float detail, int mode,
     }
 
     detail = detail / (float)(len / chunkNum);
-
+    
+    // printf("len %d chunkNum %d detail %f mode %d\n",len, chunkNum, detail, mode);
    
     for (int i = 0; i < len - shapeNum; i += chunkNum - 4)
     {

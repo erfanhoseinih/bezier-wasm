@@ -35,7 +35,7 @@ function setChunck(chunk, vertices) {
     chunk = 1;
   }
 
-  chunkNum = parseInt(vertices.length / chunk) / 2;
+  chunkNum = parseInt((vertices.length / 2) / chunk);
 
   if (chunkNum < 3) {
     chunkNum = 3;
@@ -53,7 +53,6 @@ function curveBezier(vertices, chunk, detail, mode) {
   }
   // set chunckNum value
   let chunkNum = setChunck(chunk, vertices);
-
   detail *= 2;
 
   [curveBezier_output_ptr, curveBezier_output_ptr_size] = setCurveBezierPointer(

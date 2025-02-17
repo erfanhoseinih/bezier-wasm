@@ -2,14 +2,11 @@ let ctx0;
 let ctx1;
 
 Module.onRuntimeInitialized = function () {
-
   randomSeed(1000);
-
 
   let canvas0 = document.getElementById("canvas0");
   ctx0 = canvas0.createCanvasContext(500, 500);
   ctx0.background(200, 200, 100);
-
 
   let canvas1 = document.getElementById("canvas1");
   ctx1 = canvas1.createCanvasContext(500, 500);
@@ -19,7 +16,6 @@ Module.onRuntimeInitialized = function () {
   ctx2 = canvas2.createCanvasContext(500, 500);
   drawCtx2(ctx2);
 
-
   let canvas3 = document.getElementById("canvas3");
   ctx3 = canvas3.createCanvasContext(500, 500);
   drawCtx3(ctx3);
@@ -27,39 +23,33 @@ Module.onRuntimeInitialized = function () {
   let canvas4 = document.getElementById("canvas4");
   ctx4 = canvas4.createCanvasContext(500, 500);
   drawCtx4(ctx4);
-
 };
-
-
-
 
 function drawCtx4(ctx) {
   ctx.background(200, 200, 100);
-  let detail = 10;
+  let detail = 20;
   let verts = drawRect(
     ctx.canvas.width / 2 - 100,
     ctx.canvas.height / 2 - 100,
     200,
     200
   );
- 
-  verts.splice(4,0,400,250)
 
-  verts.splice(8,0,250,450)
+  verts.splice(4, 0, 400, 250);
 
-  verts.splice(12,0,110,450)
+  verts.splice(8, 0, 250, 450);
 
-  verts.splice(14,0,110,170)
+  verts.splice(12, 0, 110, 450);
 
- 
- 
+  verts.splice(14, 0, 110, 170);
+
   ctx.beginPath();
   for (let j = 0; j < verts.length; j += 2) {
     ctx.lineTo(verts[j], verts[j + 1]);
   }
   ctx.stroke();
- 
-  let result = curveBezier(verts, 1 , detail, 2);
+
+  let result = curveBezier(verts, 1, detail, 2);
 
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -68,7 +58,6 @@ function drawCtx4(ctx) {
   }
   ctx.stroke();
 }
-
 
 function drawCtx3(ctx) {
   ctx.background(200, 200, 100);
@@ -79,16 +68,15 @@ function drawCtx3(ctx) {
     200,
     200
   );
- 
- 
+
   ctx.beginPath();
   for (let j = 0; j < verts.length; j += 2) {
     ctx.lineTo(verts[j], verts[j + 1]);
   }
   ctx.stroke();
- 
-  let result = curveBezier(verts, 1 , detail, 1);
- 
+
+  let result = curveBezier(verts, 1, detail, 1);
+
   ctx.lineWidth = 3;
   ctx.beginPath();
   for (let j = 0; j < result.length; j += 2) {
@@ -106,16 +94,16 @@ function drawCtx2(ctx) {
     200,
     200
   );
- 
-  verts.splice(8,2)
- 
+
+  verts.splice(8, 2);
+
   ctx.beginPath();
   for (let j = 0; j < verts.length; j += 2) {
     ctx.lineTo(verts[j], verts[j + 1]);
   }
   ctx.stroke();
- 
-  let result = curveBezier(verts, 2 , detail, 1);
+
+  let result = curveBezier(verts, 2, detail, 1);
 
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -124,7 +112,6 @@ function drawCtx2(ctx) {
   }
   ctx.stroke();
 }
-
 
 function drawCtx1(ctx) {
   ctx.background(200, 200, 100);
@@ -141,8 +128,8 @@ function drawCtx1(ctx) {
     ctx.lineTo(verts[j], verts[j + 1]);
   }
   ctx.stroke();
- 
-  let result = curveBezier(verts,5, detail, 2);
+
+  let result = curveBezier(verts, 5, detail, 2);
 
   ctx.lineWidth = 3;
   ctx.beginPath();
