@@ -47,6 +47,8 @@
         "typeinfo": "cpp",
         "stdio.h": "c",
         "stdlib.h": "c",
-        "charconv": "c"
+        "charconv": "c",
+        "chrono": "c",
+        "semaphore": "c"
     }
 }

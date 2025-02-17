@@ -9,6 +9,16 @@
     <script src="./bezier/bezier.js"></script>
     <script src="./bezier/bezierWasmCaller.js"></script>
     <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .content {
+        margin: 20px;
+      }
+
       .buttons {
         width: 500px;
         display: flex;
@@ -32,15 +42,35 @@
     </style>
   </head>
 
-  <body>
-    <canvas id="canvas"></canvas>
-    <div class="buttons">
-      <p>Number of curves</p>
-      <input type="number" value="200" id="inputnum" />
-      <button onclick="wasmtest()">run</button>
+  <body class="container">
+    <div class="content">
+      <canvas id="canvas4"></canvas>
     </div>
-    <p id="wasmtime"></p>
-    <p id="jstime"></p>
+
+    <div class="content">
+      <canvas id="canvas3"></canvas>
+    </div>
+
+    <div class="content">
+      <canvas id="canvas2"></canvas>
+    </div>
+
+    <div class="content">
+      <canvas id="canvas1"></canvas>
+    </div>
+
+    <div class="content">
+      <canvas id="canvas0"></canvas>
+
+      <div class="buttons">
+        <p>Number of curves</p>
+        <input type="number" value="200" id="inputnum" />
+        <button onclick="wasmtest()">run</button>
+      </div>
+      <p id="wasmtime"></p>
+      <p id="jstime"></p>
+    </div>
+
     <script src="./main.js"></script>
   </body>
 </html>

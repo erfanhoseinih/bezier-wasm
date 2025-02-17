@@ -1,8 +1,9 @@
 
 
 #include <emscripten.h>
+#include <math.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 int LINE = 1;
 int SHAPE = 2;
 
@@ -36,75 +37,142 @@ int closePath(float *input_array, int len)
     return len;
 }
 
-float *setMidOfVerts(float *vertices, int len)
+void openPath(float *input_array, int *len, int *chunkNum)
 {
-    vertices[0] = lerp(vertices[0], vertices[2], 0.5);
-    vertices[1] = lerp(vertices[1], vertices[3], 0.5);
-
-    vertices[len - 1] = lerp(vertices[len - 3], vertices[len - 1], 0.5);
-    vertices[len - 2] = lerp(vertices[len - 4], vertices[len - 2], 0.5);
-
-    return vertices;
+    if (input_array[0] == input_array[(*len) - 2] && input_array[1] == input_array[(*len) - 1])
+    {
+        if ((*chunkNum) >= (*len))
+        {
+            (*chunkNum) -= 2;
+        }
+        (*len) -= 2;
+    }
 }
- 
 
+float *setMidOfVerts(float *verts, int len)
+{
+    verts[0] = lerp(verts[0], verts[2], 0.5);
+    verts[1] = lerp(verts[1], verts[3], 0.5);
+
+    verts[len - 1] = lerp(verts[len - 3], verts[len - 1], 0.5);
+    verts[len - 2] = lerp(verts[len - 4], verts[len - 2], 0.5);
+
+    return verts;
+}
+
+int constrain(int n, int min, int max)
+{
+    if (n < min)
+    {
+        n = min;
+    }
+    else if (n > max)
+    {
+        n = max;
+    }
+    return n;
+}
+
+void setChunckVertices(float *vertices, float *chunkVertices, int *chunkVerticesIndex, int i, int chunkNum, int len)
+{
+     
+    for (int j = i; j < constrain(i + chunkNum, 0, len+4); j += 2)
+    {
+
+        chunkVertices[(*chunkVerticesIndex)] = flexIndex(vertices, len, j);
+
+        (*chunkVerticesIndex)++;
+        chunkVertices[(*chunkVerticesIndex)] = flexIndex(vertices, len, j + 1);
+
+        (*chunkVerticesIndex)++;
+    }
+}
 
 EMSCRIPTEN_KEEPALIVE
-void curveBezier(float *vertices, int len, int chunkNum, float detail, int mode, float *output, float *currnetVerts, float *chunkVerts)
+void curveBezier(float *vertices, int len, int chunkNum, float detail, int mode, float *output, float *currentVertices, float *chunkVertices, int *outputLen)
 {
-  
-
-    if (len / 2 < 3)
-    {
-        return ;
-    }
-  
-    detail = detail / (float)((len) / chunkNum);
     int outputIndex = 0;
-    for (int i = 0; i < len - chunkNum / 2; i += chunkNum)
+    int shapeNum = 4;
+    if (mode == SHAPE)
     {
-        int extraVertsLen = (((chunkNum / 9) / 2) * 2);
-        for (float k = (1 / detail) * (detail / 11); k < 1 - (1 / detail) * (detail / 11); k += 1 / detail)
+        openPath(vertices, &len, &chunkNum);
+        shapeNum = 0;
+    }
+    else
+    {
+        output[outputIndex] = vertices[0];
+        outputIndex++;
+        output[outputIndex] = vertices[1];
+        outputIndex++;
+    }
+
+    detail = detail / (float)(len / chunkNum);
+
+   
+    for (int i = 0; i < len - shapeNum; i += chunkNum - 4)
+    {
+  
+        for (float k = 0; k < 1; k += 1 / detail)
         {
 
-            int chunkVertsIndex = 0;
-
-            for (int ik = i - extraVertsLen; ik < i + chunkNum + extraVertsLen; ik++)
+            int chunkVerticesIndex = 0;
+            setChunckVertices(vertices, chunkVertices, &chunkVerticesIndex, i, chunkNum, len);
+            if (mode == SHAPE)
             {
-                chunkVerts[chunkVertsIndex] = flexIndex(vertices, len, ik);
-
-                chunkVertsIndex++;
+                chunkVertices = setMidOfVerts(chunkVertices, chunkVerticesIndex);
             }
- 
-            int extraDiv = chunkVertsIndex / extraVertsLen;
-
-            chunkVerts = setMidOfVerts(chunkVerts, chunkVertsIndex);
-            int bizLen = chunkVertsIndex - 2;
-            for (int j = 0; j < bizLen; j += 1)
+            else
             {
-                int currnetVertsIndex = 0;
-                for (int m = 0; m < chunkVertsIndex - 2; m += 2)
+                if (len > chunkNum)
                 {
-
-                    float x = lerp(chunkVerts[m], chunkVerts[m + 2], k);
-                    float y = lerp(chunkVerts[m + 1], chunkVerts[m + 3], k);
-
-                    currnetVerts[currnetVertsIndex] = x;
-                    currnetVertsIndex++;
-                    currnetVerts[currnetVertsIndex] = y;
-                    currnetVertsIndex++;
+                    chunkVertices = setMidOfVerts(chunkVertices, chunkVerticesIndex);
                 }
-
-                for (int q = 0; q < currnetVertsIndex; q++)
-                {
-                    chunkVerts[q] = currnetVerts[q];
-                }
-                chunkVertsIndex = currnetVertsIndex;
             }
 
-            output[outputIndex] = chunkVerts[0];
+            float lerpNum;
+            while (chunkVerticesIndex > 2)
+            {
+
+                int currentVerticesIndex = 0;
+                for (int m = 0; m < chunkVerticesIndex - 2; m += 2)
+                {
+                    // if (chunkVerticesIndex / 2 == 3)
+                    // {
+                    //     if (m == 0)
+                    //     {
+                    //         lerpNum = pow(k, 0.3);
+                    //     }
+                    //     else if (m == 2)
+                    //     {
+                    //         lerpNum = pow(k,4);
+                    //     }
+                    // }
+                    // else
+                    // {
+                    //     lerpNum = k;
+                    // }
+
+                    lerpNum = k;
+
+                    float x = lerp(chunkVertices[m], chunkVertices[m + 2], lerpNum);
+                    float y = lerp(chunkVertices[m + 1], chunkVertices[m + 3], lerpNum);
+
+                    currentVertices[currentVerticesIndex] = x;
+                    currentVerticesIndex++;
+                    currentVertices[currentVerticesIndex] = y;
+                    currentVerticesIndex++;
+                }
+
+                for (int q = 0; q < currentVerticesIndex; q++)
+                {
+                    chunkVertices[q] = currentVertices[q];
+                }
+                chunkVerticesIndex = currentVerticesIndex;
+            }
+
+            output[outputIndex] = chunkVertices[0];
             outputIndex++;
-            output[outputIndex] = chunkVerts[1];
+            output[outputIndex] = chunkVertices[1];
             outputIndex++;
         }
     }
@@ -119,122 +187,17 @@ void curveBezier(float *vertices, int len, int chunkNum, float detail, int mode,
             outputIndex++;
         }
     }
-
-    // adding length num in fist element of array
-    for (int i = outputIndex - 1; i >= 0; i--)
+    else
     {
-        output[i + 1] = output[i];
+
+        output[outputIndex] = vertices[len - 2];
+        outputIndex++;
+        output[outputIndex] = vertices[len - 1];
+        outputIndex++;
     }
-    outputIndex++;
-    output[0] = outputIndex;
- 
+
+    outputLen[0] = outputIndex;
 }
-
-// EMSCRIPTEN_KEEPALIVE
-// float *curveBezier(float *vertices, int len, int chunk, float detail, int mode)
-// {
-
-//     float *output = malloc((detail * len) * sizeof(float));
-//     float *currnetVerts = malloc(len * sizeof(float));
-//     int outputIndex = 0;
-
-//     if (len / 2 < 3)
-//     {
-//         return vertices;
-//     }
-
-//     chunk /= 2;
-//     chunk *= 2;
-//     int chunkNum;
-
-//     if (chunk > len)
-//     {
-//         chunkNum = len;
-//     }
-//     else if (chunk < 4)
-//     {
-//         chunkNum = 4;
-//     }
-//     else
-//     {
-//         chunkNum = chunk;
-//     }
-
-//     float *chunkVerts = malloc(chunkNum * sizeof(float));
- 
-//     detail = detail / (float)((len) / chunkNum);
-
-//     for (int i = 0; i < len - chunkNum / 2; i += chunkNum)
-//     {
-//         int extraVertsLen = (((chunkNum / 9) / 2) * 2);
-//         for (float k = (1 / detail) * (detail / 11); k < 1 - (1 / detail) * (detail / 11); k += 1 / detail)
-//         {
-
-//             int chunkVertsIndex = 0;
-
-//             for (int ik = i - extraVertsLen; ik < i + chunkNum + extraVertsLen; ik++)
-//             {
-//                 chunkVerts[chunkVertsIndex] = flexIndex(vertices, len, ik);
-
-//                 chunkVertsIndex++;
-//             }
-
-//             // printf("%d\n",);
-
-//             int extraDiv = chunkVertsIndex / extraVertsLen;
-
-//             chunkVerts = setMidOfVerts(chunkVerts, chunkVertsIndex);
-//             int bizLen = chunkVertsIndex - 2;
-//             for (int j = 0; j < bizLen; j += 1)
-//             {
-//                 int currnetVertsIndex = 0;
-//                 for (int m = 0; m < chunkVertsIndex - 2; m += 2)
-//                 {
-
-//                     float x = lerp(chunkVerts[m], chunkVerts[m + 2], k);
-//                     float y = lerp(chunkVerts[m + 1], chunkVerts[m + 3], k);
-
-//                     currnetVerts[currnetVertsIndex] = x;
-//                     currnetVertsIndex++;
-//                     currnetVerts[currnetVertsIndex] = y;
-//                     currnetVertsIndex++;
-//                 }
-
-//                 for (int q = 0; q < currnetVertsIndex; q++)
-//                 {
-//                     chunkVerts[q] = currnetVerts[q];
-//                 }
-//                 chunkVertsIndex = currnetVertsIndex;
-//             }
-
-//             output[outputIndex] = chunkVerts[0];
-//             outputIndex++;
-//             output[outputIndex] = chunkVerts[1];
-//             outputIndex++;
-//         }
-//     }
-
-//     if (mode == SHAPE)
-//     {
-//         if (output[0] != output[outputIndex - 2] || output[1] != output[outputIndex - 1])
-//         {
-//             output[outputIndex] = output[0];
-//             outputIndex++;
-//             output[outputIndex] = output[1];
-//             outputIndex++;
-//         }
-//     }
-
-//     // adding length num in fist element of array
-//     for (int i = outputIndex - 1; i >= 0; i--)
-//     {
-//         output[i + 1] = output[i];
-//     }
-//     outputIndex++;
-//     output[0] = outputIndex;
-
-//     return output;
-// }
 
 EMSCRIPTEN_KEEPALIVE
 void *wasmmalloc(size_t n)
@@ -243,12 +206,11 @@ void *wasmmalloc(size_t n)
 }
 
 EMSCRIPTEN_KEEPALIVE
-void *wasmrealloc(void *ptr , size_t n)
+void *wasmrealloc(void *ptr, size_t n)
 {
-    return realloc(ptr, n); 
+    return realloc(ptr, n);
 }
 
- 
 EMSCRIPTEN_KEEPALIVE
 void wasmfree(void *ptr)
 {
